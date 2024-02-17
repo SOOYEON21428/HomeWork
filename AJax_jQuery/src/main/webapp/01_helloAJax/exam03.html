@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    <h1 class="title">$.ajax()함수를 사용한 HTML 읽기</h1>
+    <div class="exec">
+        <input type="button" value="txt파일 가져오기" id="mybtn" />
+     </div>
+     <div class="console" id="result"> </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(function(){
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:8080/AJax_jQuery/text/textdata.jsp',
+
+                data: 'keyword=Hello AJax!!',
+
+                dataType: 'text',
+
+                success: function(data){
+                    $('#result').html(data);
+                },
+                error: function(err) {
+                    alert(err);
+                }
+
+
+            });
+        });
+        
+        </script>
+</body>
+</html>
