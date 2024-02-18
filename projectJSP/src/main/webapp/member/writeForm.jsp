@@ -125,6 +125,7 @@
 
         function checkId() {
             var id = $("#id").val();
+            //ajax로 풀어보기--
 
             $.ajax({
                 type: "POST",
