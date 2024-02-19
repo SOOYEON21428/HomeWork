@@ -2,32 +2,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="member.dao.MemberDAO"%>
 <%@ page import="member.bean.MemberDTO"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<c:set var="id" value="${param.id}" />
+<c:set var="pwd" value="${param.pwd}" />
 
 <%
-    // 데이터
-    String id = request.getParameter("id");
-    String pwd = request.getParameter("pwd");
-
     MemberDTO memberDTO = new MemberDTO();
-
-    // DB - Select
     MemberDAO memberDAO = MemberDAO.getInstance();
-    memberDTO = memberDAO.login(id, pwd);
-    
-    // 널 체크
-    if (memberDTO == null) { 
-        response.sendRedirect("loginFail.jsp");
-    } else {
-        // 이메일 합치기
-        String email1 = memberDTO.getEmail1();
-        String email2 = memberDTO.getEmail2();
-        String email = email1 + "@" + email2;
-
-        // 세션 사용
-        session.setAttribute("memName", memberDTO.getName());
-        session.setAttribute("memId", id);
-        session.setAttribute("email", email);
-
-        response.sendRedirect("loginOk.jsp");
-    }
+    memberDAO = memberDAO.login(id, pwd);
 %>
+
+<c:choose>
+    <c:when test="${empty memberDTO}">
+        <c:redirect url="loginFail.jsp" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="email1" value="${memberDTO.email1}" />
+        <c:set var="email2" value="${memberDTO.email2}" />
+        <c:set var="email" value="${email1 + '@' + email2}" />
+
+        <c:set var="memName" value="${memberDTO.name}" />
+        <c:set var="memId" value="${id}" />
+        <c:set var="sessionEmail" value="${email}" />
+
+        <c:redirect url="loginOk.jsp" />
+    </c:otherwise>
+</c:choose>

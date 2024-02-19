@@ -4,21 +4,19 @@
 <%@ page import="member.bean.MemberDTO"%>
 <%@ page import="board.dao.BoardDAO"%>
 <%@ page import="board.bean.BoardDTO"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+ 
 <%
     // 데이터
     String subject = request.getParameter("subject");
     String content = request.getParameter("content");
-    
+
     // pg 파라미터를 가져오고, null일 경우 1로 설정
     int pg = (request.getParameter("pg") == null) ? 1 : Integer.parseInt(request.getParameter("pg"));
 
     // 페이징 처리
     int endNum = pg * 5;
     int startNum = endNum - 4;
-
-    // boardDTO.setSubject(subject);
-    // boardDTO.setContent(content);
 
     String id = (String) session.getAttribute("memId");
     String name = (String) session.getAttribute("memName");
@@ -29,7 +27,7 @@
 
     ArrayList<BoardDTO> boardDTOList = boardDAO.loadContents(startNum, endNum);
 
-    int totalA = boardDAO.getTotalA(); // 총글수
+    int totalA = boardDAO.getTotalA(); // 총 글 수
     int totalP = (totalA + 4) / 5; // 총 페이지 수
 %>
 
@@ -58,30 +56,33 @@
         </thead>
 
         <tbody>
-            <% for (BoardDTO board : boardDTOList) { %>
+            <c:forEach var="board" items="${boardDTOList}">
                 <tr>
                     <th>
-                        <% for (int i = 0; i < board.getLev(); i++) { %>
+                        <c:forEach begin="1" end="${board.lev}">
                             &emsp;
-                        <% } // for %>
-                        <% if (board.getPseq() != 0) { %><img src="../image/reply.gif" alt="reply"> <% } // if %>
-                        <%= board.getSeq() %> </th>
-                    <th><%= board.getId() %> </th>
-                    <th><%= board.getName() %> </th>
-                    <th><%= board.getEmail() %> </th>
-                    <th><%= board.getSubject() %> </th>
-                    <td><%= board.getContent() %> </td>
-                    <td><%= board.getLogtime() %> </td>
-                    <td><%= board.getHit() %> </td>
+                        </c:forEach>
+                        <c:if test="${board.pseq ne 0}">
+                            <img src="../image/reply.gif" alt="reply">
+                        </c:if>
+                        ${board.seq}
+                    </th>
+                    <th>${board.id}</th>
+                    <th>${board.name}</th>
+                    <th>${board.email}</th>
+                    <th>${board.subject}</th>
+                    <td>${board.content}</td>
+                    <td>${board.logtime}</td>
+                    <td>${board.hit}</td>
                 </tr>
-            <% } %>
+            </c:forEach>
         </tbody>
     </table>
 
     <div style="text-align:center; width:700px;">
-        <% for (int i = 1; i <= totalP; i++) { %>
-            <a href="board.jsp?pg=<%=i %>"><%=i %></a>
-        <% } // for %>
+        <c:forEach begin="1" end="${totalP}" varStatus="loop">
+            <a href="board.jsp?pg=${loop.index}">${loop.index}</a>
+        </c:forEach>
     </div>
 
 </body>

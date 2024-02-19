@@ -31,10 +31,14 @@
 	</c:forEach>
 	<br><br>
 	<%-- for(int i=1; i<=10; i++) --%>
+	
+	
 	<h3>*** forToken ***</h3>
 	<c:forTokens var="car" items="소나타,아우디,페라리,벤츠,링컨" delims=",">
 	${car }<br>
 	</c:forTokens>
+	
+	
 	
 </body>
 </html>

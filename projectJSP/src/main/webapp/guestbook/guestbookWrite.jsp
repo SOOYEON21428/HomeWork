@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="guestbook.dao.GuestbookDAO" %>
 <%@ page import="guestbook.bean.GuestbookDTO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
     request.setCharacterEncoding("UTF-8");
@@ -30,10 +31,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Guestbook Write</title>
-    <script>
-        alert("방명록 등록하였습니다.");
-        location.href = "guestbookList.jsp";
-    </script>
+    <c:if test="${not empty param.success}">
+        <script>
+            alert("방명록 등록하였습니다.");
+            location.href = "guestbookList.jsp";
+        </script>
+    </c:if>
 </head>
 <body>
 </body>

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <%
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -8,7 +10,7 @@
     try {
         // JDBC 드라이버 로드
         Class.forName("oracle.jdbc.driver.OracleDriver");
-      
+
         // 데이터베이스 연결 정보 설정
         String url = "jdbc:oracle:thin:@//localhost:1521/xe";
         String user = "C##JAVA";
@@ -16,12 +18,22 @@
 
         // 데이터베이스 연결
         conn = DriverManager.getConnection(url, user, password);
-       
+
         // SQL 쿼리 작성
         String sql = "SELECT * FROM guestbook ORDER BY logtime DESC";
-        pstmt = conn.prepareStatement(sql);     
+        pstmt = conn.prepareStatement(sql);
         rs = pstmt.executeQuery();
-        
+
+        // JSTL로 변경된 부분
+        pageContext.setAttribute("guestbookList", rs);
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        // 리소스 해제
+        try { if (rs != null) rs.close(); } catch (SQLException e) {}
+        try { if (pstmt != null) pstmt.close(); } catch (SQLException e) {}
+        try { if (conn != null) conn.close(); } catch (SQLException e) {}
+    }
 %>
 
 <!DOCTYPE html>
@@ -29,7 +41,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Guestbook List</title>
-    
 </head>
 <body>
 
@@ -45,33 +56,17 @@
             <th>내용</th>
         </tr>
 
-        
-        <%
-            while (rs.next()) {
-        %>
-        <tr>
-            <td><%= rs.getString("name") %></td>
-            <td><%= rs.getString("logtime") %></td>
-            <td><%= rs.getString("email") %></td>
-            <td><%= rs.getString("homepage") %></td>
-            <td><%= rs.getString("subject") %></td>
-            <td><%= rs.getString("content") %></td>
-        </tr>
-        <%
-            }
-        %>
+        <c:forEach var="entry" items="${guestbookList}">
+            <tr>
+                <td>${entry.name}</td>
+                <td>${entry.logtime}</td>
+                <td>${entry.email}</td>
+                <td>${entry.homepage}</td>
+                <td>${entry.subject}</td>
+                <td>${entry.content}</td>
+            </tr>
+        </c:forEach>
     </table>
-
-<%
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        // 리소스 해제
-        try { if (rs != null) rs.close(); } catch (SQLException e) {}
-        try { if (pstmt != null) pstmt.close(); } catch (SQLException e) {}
-        try { if (conn != null) conn.close(); } catch (SQLException e) {}
-    }
-%>
 
 </body>
 </html>

@@ -2,6 +2,7 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="board.dao.BoardDAO"%>
 <%@ page import="board.bean.BoardDTO"%>
+<%@ prefix="c" taglib uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
     int pg = (request.getParameter("pg") == null) ? 1 : Integer.parseInt(request.getParameter("pg"));
@@ -55,35 +56,38 @@
         </thead>
 
         <tbody>
-            <% for (BoardDTO board : boardDTOList) { %>
+            <c:forEach var="board" items="${boardDTOList}">
                 <tr>
                     <td>
-                        <% for (int i = 0; i < board.getLev(); i++) { %>
+                        <c:forEach begin="1" end="${board.lev}">
                             &emsp;
-                        <% } // for %>
-                        <% if (board.getPseq() != 0) { %><img src="../image/reply.gif" alt="reply"> <% } // if %>
-                        <%= board.getSeq() %>
+                        </c:forEach>
+                        <c:if test="${board.pseq ne 0}"><img src="../image/reply.gif" alt="reply"></c:if>
+                        ${board.seq}
                     </td>
-                    <td><%= board.getId() %> </td>
-                    <td><%= board.getName() %> </td>
-                    <td><%= board.getEmail() %> </td>
-                    <td><%= board.getSubject() %> </td>
-                    <td><%= board.getContent() %> </td>
-                    <td><%= board.getLogtime() %> </td>
-                    <td><%= board.getHit() %> </td>
+                    <td>${board.id}</td>
+                    <td>${board.name}</td>
+                    <td>${board.email}</td>
+                    <td>${board.subject}</td>
+                    <td>${board.content}</td>
+                    <td>${board.logtime}</td>
+                    <td>${board.hit}</td>
                 </tr>
-            <% } // enhanced for %>
+            </c:forEach>
         </tbody>
     </table>
 
     <div style="text-align:center; width:700px;">
-        <% for (int i = 1; i <= totalP; i++) { %>
-            <% if (pg == i) { %>
-                <a id="currentPaging" href="board.jsp?pg=<%=i %>"><%=i %></a>
-            <% } else { %>
-                <span><a id="paging" href="board.jsp?pg=<%=i %>"><%=i %></a></span>
-            <% } // if-else %>
-        <% } // for %>
+        <c:forEach begin="1" end="${totalP}" varStatus="loop">
+            <c:choose>
+                <c:when test="${pg == loop.index}">
+                    <a id="currentPaging" href="board.jsp?pg=${loop.index}">${loop.index}</a>
+                </c:when>
+                <c:otherwise>
+                    <span><a id="paging" href="board.jsp?pg=${loop.index}">${loop.index}</a></span>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
     </div>
 
 </body>
