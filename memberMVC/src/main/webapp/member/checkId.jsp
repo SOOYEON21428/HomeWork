@@ -1,15 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="member.dao.MemberDAO" %>
-<%@ page import="member.dao.MemberDAO" %>    
-<%
-	String id = request.getParameter("id");
-
-	//DB
-	MemberDAO memberDAO = MemberDAO.getInstance(); //생성
-	boolean exist = memberDAO.isExistId(id); //호출
-	
-%>
-
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,28 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%if(exist){ %>
-	<form action="checkId.jsp">
-		<font color="red"><strong>선택하신 아이디 <%=id %>은 사용 불가능</strong></font>
-		<br><br>
-		아이디 <input type="text" name="id">
-		<input type="submit" value="중복체크">
-	</form>
-	
-<%}else{ %>
-	<font color="blue"><strong>선택하신 아이디 <%=id %>은 사용 가능</strong></font>
-	<br><br>
-	<input type="button" value="사용하기" onclick="checkIdClose('<%=id %>')">
-<%} %>
-
-<script type="text/javascript">
-function checkIdClose(id) {
-	opener.document.getElementById("id").value = id;
-	opener.document.getElementById("check").value = id;
-	window.close();
-	opener.document.getElementById("pwd").focus();
-}
-</script>
+	<c:if test="${exist }">exist</c:if>
+	<c:if test="${not exist }">non_exist</c:if>
 </body>
 </html>
 

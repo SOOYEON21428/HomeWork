@@ -116,7 +116,7 @@ table {
 window.onload=function(){
 	//radio는 배열의 값으로 넘어온다. 그래서 남자는 gender[0], 여자는 gender[1]
 	document.updateForm.gender['${memberDTO.gender}'].checked = true;
-	~~~;
+	document.updateForm.tel1.value = '${memberDTO.tel1}';
 }
 </script>
 </body>

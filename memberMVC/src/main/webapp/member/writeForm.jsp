@@ -31,7 +31,7 @@ table {
 			<th>아이디</th>
 			<td>
 				<input type="text" name="id" id="id" size="25" placeholder="아이디 입력">
-				<!-- <button type="button" onclick="checkId(); return false;">중복체크</button> -->
+				
 				<input type="hidden" id="check" value="">
 				<div id="idDiv"></div>
 			</td>
@@ -126,7 +126,7 @@ table {
 			else
 				$.ajax({
 					type: 'post',
-					url: 'checkId2.jsp',
+					url: '/memberMVC/member/checkId2.do',
 					data: 'id=' + $('#id').val(), //서버로 보낼 데이터
 					dataType: 'text', //서버로부터 오는 데이터 타입, 'exist' or 'non_exist'
 					success: function(data){

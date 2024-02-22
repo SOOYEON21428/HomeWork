@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member.dao.MemberDAO">
+    <select id="isExistID" parameterType="java.lang.String" resultType="java.lang.Boolean">
+        SELECT COUNT(*) FROM MEMBER WHERE ID = #{id}
+    </select>
+
+    <insert id="insert" parameterType="member.bean.MemberDTO">
+        INSERT INTO MEMBER (NAME, ID, PWD, GENDER, EMAIL1, EMAIL2, TEL1, TEL2, TEL3, ZIPCODE, ADDR1, ADDR2, REGDATE)
+        VALUES (#{name}, #{id}, #{pwd}, #{gender}, #{email1}, #{email2}, #{tel1}, #{tel2}, #{tel3}, #{zipcode}, #{addr1}, #{addr2}, sysdate)
+    </insert>
+
+    <select id="login" parameterType="member.bean.MemberDTO" resultType="member.bean.MemberDTO">
+        SELECT * FROM MEMBER WHERE ID = #{id} AND PWD = #{pwd}
+    </select>
+</mapper>
+
+
