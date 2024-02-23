@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<style>
+<style type="text/css">
 .mainnav{
 	background-color: #483D8B;
 	list-style: none;
@@ -26,43 +26,28 @@
 	background-color: #483D8B;
 	color: #ffffff;
 	font: bold 16px/40px 'Nanum Gothic', sans-serif; 
-		/폰트의 굵기 | 글자의 크기 | /line-height 줄간격 |  글꼴  , 앞에 글꼴없으면 다음 글꼴/
+		/*폰트의 굵기 | 글자의 크기 | /line-height 줄간격 |  글꼴  , 앞에 글꼴없으면 다음 글꼴*/
 	text-transform: uppercase;
 	text-decoration: none;
 }
+
 .mainnav li a:hover {
 	color: #660000;
 	background-color: #ffcc00;
 }
 </style>
 
-	<ul class="mainnav">
-		<li><a href="#">글쓰기</a></li>
-		<li><a href="#">목록</a></li>
-		<li><a href="index.jsp"><input type="button" value="메인화면"></a></li>
-		<li></li>
-		<li></li>
-		<li></li>
-	</ul>
+<ul class="mainnav">
+	<c:if test="${sessionScope.memId != null }">
+		<li><a href="/projectMVC/board/boardWriteForm.do">글쓰기</a></li>
+	</c:if>
+	<li><a href="/projectMVC/board/boardList.do?pg=1">목록</a></li>
+</ul>
 
-<a href="index.jsp"><input type="button" value="메인화면"></a>
-<a href="login.jsp"><input type="button" value="로그인"></a>
-<a href="signup.jsp"><input type="button" value="회원가입"></a>
 
-<%
-    // Assuming 'loggedIn' is a boolean indicating whether the user is logged in or not.
-    boolean loggedIn = true; // Change this based on your login status.
-%>
 
-<%
-    if (loggedIn) {
-%>
-    <a href="write.jsp"><input type="button" value="글쓰기"></a>
-<%
-    }
-%>
 
-	
+
 
 
 

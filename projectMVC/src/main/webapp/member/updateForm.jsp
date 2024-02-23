@@ -1,23 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+
 <style type="text/css">
 table {
 	border-collapse: collapse;
 }
+
 #updateForm div {
 	font-size: 8pt;
 	font-weight: bold;
 	color: red;
 }
+
+#updateForm {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 30px auto;
+	text-align: left;
+}
 </style>
-</head>
-<body>
-<form name="updateForm" id="updateForm" method="post" action="/memberMVC/member/update.do">
+
+<div id="header" style="text-align: center;">
+	<h1>
+		<a href="/projectMVC/index.jsp">
+			<img alt="사과" src="/projectMVC/image/apple.png" width="50" height="50"></a>
+		MVC를 활용한 미니 프로젝트
+	</h1>
+</div>
+<hr style="border-color: yellowgreen;">
+
+<form name="updateForm" id="updateForm">
 	<table border="1" cellpadding="5">
 		<tr>
 			<th width="100">이름</th>
@@ -103,24 +116,24 @@ table {
         
         <tr>
         	<td colspan="2" align="center">
-        		<input type="button" onclick="checkUpdate()" value="회원정보수정">
+        		<input type="button" value="회원정보수정" id="updateBtn">
         		<input type="reset" value="다시입력" onclick="location.reload()">
         	</td>
         </tr>
 	</table>
 </form>
 
+<script src="http://code.jQuery.com/jquery-3.7.1.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="../js/member.js"></script>
 <script type="text/javascript">
 window.onload=function(){
 	//radio는 배열의 값으로 넘어온다. 그래서 남자는 gender[0], 여자는 gender[1]
 	document.updateForm.gender['${memberDTO.gender}'].checked = true;
-	document.updateForm.tel1.value = '${memberDTO.tel1}';
+	document.updateForm.tel1.value = '${memberDTO.tel1 }';
 }
 </script>
-</body>
-</html>
+
 
 
 

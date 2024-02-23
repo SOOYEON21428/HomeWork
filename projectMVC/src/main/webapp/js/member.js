@@ -1,38 +1,80 @@
 //유효성 검사
-function checkWrite() {
-    document.getElementById("nameDiv").innerText = "";
-    document.getElementById("idDiv").innerText = "";
-    document.getElementById("pwdDiv").innerText = "";
-
-    if(document.getElementById("name").value ==""){
-        document.getElementById("nameDiv").innerText = "이름 입력";
-    }else if(document.getElementById("id").value ==""){
-        document.getElementById("idDiv").innerText = "아이디 입력";
-    }else if(document.getElementById("check").value!=document.getElementById("id").value){
-		document.getElementById("idDiv").innerText="승훈씨 중복체크하세요";
-    }else if(document.getElementById("pwd").value ==""){
-        document.getElementById("pwdDiv").innerText = "비밀번호 입력";
-    }else if(document.getElementById("pwd").value != document.getElementById("repwd").value){
-        document.getElementById("pwdDiv").innerText = "비밀번호가 일치하지 않습니다";
-    }else{
-        document.getElementById("writeForm").submit();
-        }
-}
-
-document.getElementById('id').addEventListener('change', function() {
-    isDuplicatedChecked = false;
-});
+$('#writeBtn').click(function(){
+	$('#nameDiv').empty();
+	$('#idDiv').empty();
+	$('#pwdDiv').empty();
 	
+	if($('#name').val() == '')
+		$('#nameDiv').text('이름 입력');
+	else if($('#id').val() == '')
+		$('#idDiv').text('아이디 입력');
+	else if($('#pwd').val() == '')
+		$('#pwdDiv').text('비밀번호 입력');
+	else if($('#pwd').val() != $('#repwd').val())
+		$('#idDiv').text('비밀번호가 일치하지 않습니다');
+	else if($('#id').val() != $('#check').val())
+		$('#idDiv').text('중복체크 하세요');
+	else
+		$.ajax({
+			type: 'post',
+			url: '/projectMVC/member/write.do',
+			data: $('#writeForm').serialize(), // name=홍길동&id=hong&pwd=111~~~~
+			dataType: 'text',
+			success: function(data){
+				//alert(data.trim());
+				
+				if(data.trim() == 1){
+					alert('회원가입을 축하합니다.');
+					location.href = '/projectMVC/index.jsp';
+				}else{
+					alert('회원가입을 다시 작성하세요.');
+				}
+			},
+			error: function(e){
+				console.log(e);
+			}
+		});//$.ajax
+});
+
+
+
 //이메일
 function change(){
 	document.getElementById("email2").value = document.getElementById("email3").value;
-	
 }
 
+//회원정보수정
+$('#updateBtn').click(function(){
+	$('#nameDiv').empty();
+	$('#pwdDiv').empty();
+	
+	if($('#name').val() == '')
+		$('#nameDiv').text('이름 입력');
+	else if($('#pwd').val() == '')
+		$('#pwdDiv').text('비밀번호 입력');
+	else if($('#pwd').val() != $('#repwd').val())
+		$('#idDiv').text('비밀번호가 일치하지 않습니다');
+	else 
+		$.ajax({
+			type: 'post',
+			url: '/projectMVC/member/update.do',
+			data: $('#updateForm').serialize(), // name=홍길동&id=hong&pwd=111~~~~
+			dataType: 'text',
+			success: function(data){
+				if(data.trim() == "ok"){
+					alert('회원정보수정 완료');
+					location.href = '/projectMVC/index.jsp';
+				}
+			},
+			error: function(e){
+				console.log(e);
+			}
+		});
+});
 
-//우편 번호
+//우편번호
 function checkPost(){
-    new daum.Postcode({
+	new daum.Postcode({
             oncomplete: function(data) {
                 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
 
@@ -55,33 +97,27 @@ function checkPost(){
             }
         }).open();
 }
-var isDuplicatedChecked = false;
+
+
+//중복 아이디 체크
 function checkId(){
-	
-	var id= document.getElementById("id").value
-	if(id=="") //아이디에 값이 없다면 먼저아이디를입력하세요를 띄우기 
+	var id = document.getElementById("id").value
+	if(id == "")
 		alert("먼저 아이디를 입력하세요");
 	else
-		window.open("checkId.jsp?id="+id
-		,"checkId"
-		,"width=450 height=150 left=300 top=300 ");
-		
-		 isDuplicatedChecked = true;
-
-        alert('중복 확인이 완료되었습니다.');
-
-	
+		window.open("checkId.jsp?id="+id,
+		            "checkId",
+		            "width=450 height=150 left=300 top=150");
 }
 
-function checkUpdate(){
-    document.getElementById("pwdDiv").innerText = "";
-    
-     if(document.getElementById("name").value =="")
-        document.getElementById("nameDiv").innerText = "이름 입력";
-     else if(document.getElementById("pwd").value =="")
-        document.getElementById("pwdDiv").innerText = "비밀번호 입력";
-     else if(document.getElementById("pwd").value != document.getElementById("repwd").value)
-        document.getElementById("pwdDiv").innerText = "비밀번호가 일치하지 않습니다";
-      else
-       document.getElementById("updateForm").submit();
-}
+
+
+
+
+
+
+
+
+
+
+

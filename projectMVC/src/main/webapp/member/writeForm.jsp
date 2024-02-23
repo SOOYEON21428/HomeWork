@@ -1,28 +1,40 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
 <style type="text/css">
 table {
 	border-collapse: collapse;
 }
+
 #writeForm div {
 	font-size: 8pt;
 	font-weight: bold;
 	color: red;
 }
+
+#writeForm {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 30px auto;
+	text-align: left;
+}
 </style>
-</head>
-<body>
-<form id="writeForm" method="post" action="/memberMVC/member/write.do">
+
+<div id="header" style="text-align: center;">
+	<h1>
+		<a href="/projectMVC/index.jsp">
+			<img alt="사과" src="/projectMVC/image/apple.png" width="50" height="50"></a>
+		MVC를 활용한 미니 프로젝트
+	</h1>
+</div>
+<hr style="border-color: yellowgreen;">
+
+<form id="writeForm">
 	<table border="1" cellpadding="5">
 		<tr>
 			<th width="100">이름</th>
 			<td>
-				<input type="text" name="name" id="name" placeholder="이름">
+				<input type="text" name="name" id="name" placeholder="이름 입력">
 				<div id="nameDiv"></div>
 			</td>
 		</tr>
@@ -30,8 +42,7 @@ table {
 		<tr>
 			<th>아이디</th>
 			<td>
-				<input type="text" name="id" id="id" size="25" placeholder="아이디">
-				<!-- <button type="button" onclick="checkId(); return false;">중복체크</button> -->
+				<input type="text" name="id" id="id" size="25" placeholder="아이디 입력">
 				<input type="hidden" id="check" value="">
 				<div id="idDiv"></div>
 			</td>
@@ -40,7 +51,7 @@ table {
 		<tr>
 			<th>비밀번호</th>
 			<td>
-				<input type="password" name="pwd" id="pwd" size="30" placeholder="비밀번호">
+				<input type="password" name="pwd" id="pwd" size="30" placeholder="비밀번호 입력">
 				<div id="pwdDiv"></div>
 			</td>
 		</tr>
@@ -48,7 +59,7 @@ table {
 		<tr>
 			<th>재확인</th>
 			<td>
-				<input type="password" name="repwd" id="repwd" size="30" placeholder="다시">
+				<input type="password" name="repwd" id="repwd" size="30" placeholder="비밀번호 입력">
 			</td>
 		</tr>
 		
@@ -106,34 +117,33 @@ table {
         
         <tr>
         	<td colspan="2" align="center">
-        		<input type="button" onclick="checkWrite()" value="회원가입">
+        		<input type="button" value="회원가입" id="writeBtn">
         		<input type="reset" value="다시입력">
         	</td>
         </tr>
 	</table>
 </form>
 
+<script src="http://code.jQuery.com/jquery-3.7.1.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="../js/member.js"></script>
-
-<script src="http://code.jQuery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
 	$(function(){
 		$('#id').focusout(function() {
 			
 			if($('#id').val() == '')
-				$('#idDiv').html('먼저 아이디 입력 하세요');
+				$('#idDiv').html('먼저 아이디를 입력하세요');
 			else
 				$.ajax({
 					type: 'post',
-					url: '/memberMVC/member/checkId.do',
-					data: 'id=' + $('#id').val(), //서버로 보낼 데이터
+					url: '/projectMVC/member/checkId.do',
+					data: 'id=' + $('#id').val(), //서버로 보내는 데이터
 					dataType: 'text', //서버로부터 오는 데이터 타입, 'exist' or 'non_exist'
 					success: function(data){
 						//alert(data.trim());
 						
 						if(data.trim() == 'exist')
-							$('#idDiv').html('사용 불가').css('color', 'red');
+							$('#idDiv').html('사용 불가능').css('color', 'red');
 						else if(data.trim() == 'non_exist'){
 							$('#idDiv').html('사용 가능').css('color', 'blue');
 							$('#check').val($('#id').val());
@@ -147,8 +157,6 @@ table {
 		});//focusout()
 	});
 </script>
-</body>
-</html>
 
 
 
