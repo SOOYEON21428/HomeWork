@@ -41,6 +41,11 @@
 		select count(*) from board
 	</select>
 	
+	<!-- 1개의 글보기 -->
+	<select id="getBoard" parameterType="int" resultType="board">
+		select * from board where seq=#{seq}
+	</select>
+	
 </mapper> 
 
 

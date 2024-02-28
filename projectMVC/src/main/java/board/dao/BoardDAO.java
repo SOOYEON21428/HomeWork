@@ -1,7 +1,6 @@
 package board.dao;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
@@ -16,44 +15,63 @@ import board.bean.BoardDTO;
 
 public class BoardDAO {
 	private SqlSessionFactory sqlSessionFactory;
-
+	
 	private static BoardDAO boardDAO = new BoardDAO();
-
+	
 	public static BoardDAO getInstance() {
 		return boardDAO;
 	}
-
-	private BoardDAO() {
-		InputStream inputStream;
+	
+	public BoardDAO() {
 		try {
-			String resource = "mybatis-config.xml";
-			inputStream = Resources.getResourceAsStream(resource);
-			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException("SqlSessionFactory 초기화 실패", e); // 추가된 코드
 		}
 	}
-
-	public void write(Map<String, String> map) {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        sqlSession.insert("boardSQL.write", map);
-        sqlSession.commit();
-        sqlSession.close();
-    }
 	
-	public List<BoardDTO> boardList(int startNum, int endNum) {
-		try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-			Map<String, Integer> paramMap = new HashMap<>();
-			paramMap.put("startNum", startNum);
-			paramMap.put("endNum", endNum);
-			return sqlSession.selectList("boardSQL.boardList", paramMap);
-		}
+	public void boardWrite(Map<String, String> map) {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		sqlSession.insert("boardSQL.boardWrite", map);
+		sqlSession.commit();
+		sqlSession.close();
+	}
+	
+	public List<BoardDTO> boardList(int startNum, int endNum){
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("startNum", startNum);
+		map.put("endNum", endNum);
+		
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		List<BoardDTO> list = sqlSession.selectList("boardSQL.boardList", map);
+		sqlSession.close();
+		return list;
+	}
+	
+	public int getTotalA(){
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		int totalA = sqlSession.selectOne("boardSQL.getTotalA");
+		sqlSession.close();
+		return totalA;
 	}
 
-	public int getTotalA() {
-		try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-			return sqlSession.selectOne("boardSQL.getTotalA");
-		}
+	public BoardDTO getBoard(int seq) {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		BoardDTO boardDTO = sqlSession.selectOne("boardSQL.getBoard", seq);
+		sqlSession.close();
+		return boardDTO;
 	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+

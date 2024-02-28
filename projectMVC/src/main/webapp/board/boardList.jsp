@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
+ 
 <style type="text/css">
 #currentPaging {
 	border: 1px solid black;
@@ -30,6 +30,11 @@ span:hover {
 	margin: 30px auto;
 	text-align: left;
 }
+
+.subjectA:link {color: black; text-decoration: none;}
+.subjectA:visited {color: black; text-decoration: none;}
+.subjectA:hover {color: green; text-decoration:underline;}
+.subjectA:active {color: black; text-decoration: none;}
 
 #container {
 	margin: auto;
@@ -71,8 +76,11 @@ span:hover {
 	
 	<jsp:include page="../main/boardMenu.jsp" />
 	
+	<input type="text" id="pg" value="${pg }">
+	<input type="text" id="memId" value="${memId }">
+	
 	<div id="section" class="boardListDiv">
-		<table border="1" cellpadding="7" frame="hsides" rules="rows">
+		<table border="1" cellpadding="7" frame="hsides" rules="rows" id="boardListTable">
 			<tr>
 				<th width="100">글번호</th>
 				<th width="300">제목</th>
@@ -81,48 +89,17 @@ span:hover {
 				<th width="100">조회수</th>
 			</tr>
 			
-			<c:if test="${requestScope.list != null }">
-			
-				<c:forEach var="boardDTO" items="${list }">
-					<tr>
-						<td align="center">${boardDTO.seq }</td>
-						
-						<td>
-							<c:forEach var="i" begin="1" end="${boardDTO.lev }" step="1">
-								&emsp;
-							</c:forEach>
-							
-							<c:if test="${boardDTO.pseq != 0 }">
-								<img src="../image/reply.gif" alt="reply">
-							</c:if>
-							${boardDTO.subject }
-						</td>
-						<td align="center">
-							${boardDTO.id }
-						</td>
-						<td align="center">
-							<fmt:formatDate value="${boardDTO.logtime }" pattern="YYYY.MM.dd."/>
-						</td>
-						<td align="center">
-							${boardDTO.hit }
-						</td>
-					</tr>
-				</c:forEach>
-			
-			</c:if>
+			<!-- 동적 처리 -->
 		</table>
-		<div style="text-align: center; width: 870px; margin-top: 15px;">
-			<c:forEach var="i" begin="1" end="${totalP }" step="1">
-				<c:if test="${i == pg }">
-					<span id="currentPaging" onclick="boardPaging(${i })">${i }</span>
-				</c:if>
-				<c:if test="${i != pg }">
-					<span id="paging" onclick="boardPaging(${i })">${i }</span>
-				</c:if>
-			</c:forEach>
+		
+		<div id="boardPagingDiv" style="text-align: center; width: 870px; margin-top: 15px;">
 		</div>
 	</div>
 </div>	
+
+<script src="http://code.jQuery.com/jquery-3.7.1.min.js"></script>
+<script src="../js/boardList.js"></script>
+
 
 <script type="text/javascript">
 function boardPaging(pg) {
