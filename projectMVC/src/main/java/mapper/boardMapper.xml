@@ -5,7 +5,7 @@
 <mapper namespace="boardSQL">
 	
 	<!-- 글쓰기 -->
-	<insert id="boardWrite" parameterType="java.util.Map">
+	<!-- <insert id="boardWrite" parameterType="java.util.Map">
 		insert into board(seq,id,name,email,subject,content,ref) 
 				    values(seq_board.nextval
 				    	, #{id}
@@ -14,6 +14,11 @@
 				    	, #{subject}
 				    	, #{content}
 				    	, seq_board.nextval)
+	</insert> -->
+	
+	<!-- boardWrite 프로시저 호출 -->
+	<insert id="boardWrite" parameterType="java.util.Map" statementType="CALLABLE">
+		 { call boardWrite(#{id},#{name},#{email},#{subject},#{content}) }
 	</insert>
 	
 	<!-- 목록 -->
@@ -28,12 +33,17 @@
 		(select * from board order by ref desc, step asc)tt
 		) where rn between #{startNum} and #{endNum} -->
 		
-		<![CDATA[
+		<!-- <![CDATA[
 		select * from
 		(select rownum rn, tt.* from 
 		(select * from board order by ref desc, step asc)tt
 		) where rn >= #{startNum} and rn <= #{endNum}
-		 ]]>
+		 ]]> -->
+		 
+		<!-- MySQL -->
+		<!-- select * from order by ref desc, step asc limit 시작위치(0부터 시작), 개수 -->
+		select * from board order by ref desc, step asc limit #{startNum}, #{endNum}
+		
 	</select>
 	
 	<!-- 총글수 -->
@@ -45,6 +55,66 @@
 	<select id="getBoard" parameterType="int" resultType="board">
 		select * from board where seq=#{seq}
 	</select>
+	
+	<!-- 답글 -->
+	<update id="boardReplyStep" parameterType="board">
+		update board set step=step+1 where ref=#{ref} and step > #{step}
+	</update>
+	<insert id="boardReply" parameterType="java.util.Map">
+		insert into board (id,
+						   name,
+						   email,
+						   subject,
+						   content,
+						   ref,
+						   lev,
+						   step,
+						   pseq,
+						   reply,
+						   hit,
+						   logtime)
+				 values(#{id},
+                        #{name},
+                        #{email},
+                        #{subject},
+                        #{content},
+                        #{ref},
+                        #{lev},
+                        #{step},
+                        #{pseq},
+                        0,
+                        0,
+                        NOW());
+	</insert>
+	<update id="boardReplyReply" parameterType="int">
+		update board set reply=reply+1 where seq=#{pseq}
+	</update>
+	
+	<!-- 글수정 -->
+	<update id="boardUpdate" parameterType="java.util.Map">
+		update board set subject=#{subject}, content=#{content}, logtime=now() where seq=#{seq}
+	</update>
+	
+	<!-- 글삭제 -->
+	<!-- Oracle
+	<delete id="boardDelete" parameterType="int">
+		begin
+			원글을 찾아서 원글의 reply(답글수) 감소
+			UPDATE BOARD SET REPLY=REPLY-1 WHERE SEQ=(SELECT PSEQ FROM BOARD WHERE SEQ=#{seq});
+			
+			답글을 찾아서 subject(제목) 추가
+			UPDATE BOARD SET SUBJECT = '[원글이 삭제된 답글] ' || SUBJECT WHERE PSEQ=#{seq};
+
+			삭제
+			DELETE from BOARD WHERE SEQ=#{seq};
+		end;
+	</delete> -->
+	
+	<!-- MySQL -->
+	<!-- boardDelete 프로시저 호출 -->
+	<delete id="boardDelete" statementType="CALLABLE">
+		{ call boardDelete(#{seq}) }
+	</delete>
 	
 </mapper> 
 

@@ -41,9 +41,11 @@
 <div id="container">
 	<jsp:include page="../main/boardMenu.jsp" />
 	
+	<form id="boardViewForm">
 	<div id="section">
-		<input type="text" id="seq" value="${seq }" />
-		<input type="text" id="pg" value="${pg }" />
+		seq = <input type="text" name="seq" id="seq" value="${seq }" />
+		pg = <input type="text" name="pg" id="pg" value="${pg }" />
+		memId = <input type="text" id="memId" value="${memId }" />
 		
 		<table border="1" cellpadding="7" frame="hsides" rules="rows">
 			<tr>
@@ -60,17 +62,25 @@
 			
 			<tr>
 				<td height="300" valign="top" colspan="3">
-					<span id="contentSpan"></span>
+					<div style="width: 100%; height: 100%; overflow: auto;"> <!-- 밑으로 긴 글일 때 스크롤바가 생성 -->
+						<pre style="white-space: pre-line; word-break: break-all;">
+							<span id="contentSpan"></span>
+						</pre>
+					</div>
 				</td>
 			</tr>
 		</table>
-		<input type="button" value="목록" 
-			   onclick="location.href='/projectMVC/board/boardList.do?pg=${pg}'">
-		<span id="boardViewSpan">
-			<input type="button" value="글수정" id="boardUpdateFormBtn">
-			<input type="button" value="글삭제">
-		</span>	  
+		<div style="margin-top: 5px;">
+			<input type="button" value="목록" 
+				   onclick="location.href='/projectMVC/board/boardList.do?pg=${pg}'">
+			<span id="boardViewSpan">
+				<input type="button" value="글수정" id="boardUpdateBtn">
+				<input type="button" value="글삭제" id="boardDeleteBtn">
+			</span>
+			<input type="button" value="답글" id="boardReplyFormBtn"> 
+		</div>
 	</div>
+	</form>
 </div>
 
 <script src="http://code.jQuery.com/jquery-3.7.1.min.js"></script>

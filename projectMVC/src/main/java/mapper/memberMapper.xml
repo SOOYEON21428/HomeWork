@@ -27,7 +27,7 @@
 								, #{zipcode}
 								, #{addr1}
 								, #{addr2}
-								, sysdate)
+								, now())
 	</insert>
 	
 	<!-- 1사람의 정보를 가져오기 -->
